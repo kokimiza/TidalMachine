@@ -1,0 +1,13 @@
+cabal-version:      2.4
+name:                tidal-runner
+version:             0.1.0.0
+build-type:          Simple
+
+-- Built once at image-build time (see Dockerfile) so `tidal` and its
+-- dependency tree are already compiled into the cabal store. Each render
+-- job overwrites Main.hs and runs `cabal exec runghc Main.hs`, which only
+-- has to interpret that one small file against the pre-built package db.
+executable tidal-runner
+    main-is:          Main.hs
+    build-depends:    base, tidal
+    default-language: Haskell2010

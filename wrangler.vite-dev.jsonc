@@ -1,0 +1,22 @@
+{
+	// Used ONLY by `bun run dev` (vite dev), via platformProxy.configPath in
+	// vite.config.ts. SvelteKit's dev server emulates bindings with wrangler's
+	// getPlatformProxy(), which never builds a container image or assigns a
+	// build ID (that only happens in a real `wrangler dev` / deploy). If
+	// containers are enabled it hard-crashes instead of just leaving the
+	// TidalAgent DO unavailable, so this copy turns them off.
+	//
+	// Keep the binding/migration shape in sync with wrangler.jsonc, which is
+	// what `wrangler dev`/`wrangler deploy` actually use (containers enabled).
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "cloudflare-computer-tidal-cycles",
+	"compatibility_date": "2026-08-06",
+	"compatibility_flags": ["nodejs_compat"],
+	"dev": {
+		"enable_containers": false
+	},
+	"durable_objects": {
+		"bindings": [{ "name": "TidalAgent", "class_name": "TidalAgent" }]
+	},
+	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["TidalAgent"] }]
+}
